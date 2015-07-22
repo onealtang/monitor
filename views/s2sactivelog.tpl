@@ -1,0 +1,1 @@
+activelog count is {{.count}}
