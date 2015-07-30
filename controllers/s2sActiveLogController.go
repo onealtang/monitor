@@ -1,7 +1,7 @@
 package controllers
 import (
 	"github.com/astaxie/beego"
-	m "performad_admin/models"
+	m "monitor/models"
 )
 
 

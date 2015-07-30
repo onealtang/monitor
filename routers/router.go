@@ -1,7 +1,7 @@
 package routers
 
 import (
-	"performad_admin/controllers"
+	"monitor/controllers"
 	"github.com/astaxie/beego"
 	"github.com/beego/admin"
 )
@@ -13,4 +13,5 @@ func init() {
     beego.Router("/Adunit", &controllers.AdunitController{})
 //    beego.Router("/Adunit/all", &controllers.AdunitController{}, "get:GetAll")
 	beego.AutoRouter(&controllers.AdunitController{})
+	beego.AutoRouter(&controllers.InstallController{})
 }

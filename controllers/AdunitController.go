@@ -1,7 +1,7 @@
 package controllers
 import (
 //	"encoding/json"
-	m "performad_admin/models"
+	m "monitor/models"
 	"github.com/astaxie/beego/orm"
 	"time"
 	"github.com/astaxie/beego"
@@ -12,9 +12,9 @@ type AdunitController struct {
 }
 
 type AdunitSummaryRequest struct {
-	campaignId 		string		`form:"campaignId"`
-	startDate		time.Time	`form:"startDate"`
-	endDate			time.Time	`form:"endDate"`
+	CampaignId 		string		`form:"campaignId"`
+	StartDate		time.Time	`form:"startDate"`
+	EndDate			time.Time	`form:"endDate"`
 }
 
 func (this *AdunitController) Get() {
@@ -34,18 +34,26 @@ func (this *AdunitController) GetAll() {
 
 func (this *AdunitController) QueryCampaign() {
 	adunitSummary := new(AdunitSummaryRequest)
-//	this.ParseForm(adunitSummary)
-
-	adunitSummary.endDate = time.Now()
-	adunitSummary.startDate = time.Now().Add(-100*24*time.Hour)
+	this.ParseForm(&adunitSummary)
+//	beego.Debug("start: ", this.Ctx.Input["startDate"])
+//
+//	adunitSummary.endDate = time.Now()
+//	adunitSummary.startDate = time.Now().Add(-100*24*time.Hour)
 
 	beego.Debug(adunitSummary)
 
-	campaignSummaries, count := m.DefaultAdunitManager.GetCampaignCounts(adunitSummary.campaignId, adunitSummary.startDate, adunitSummary.endDate)
-	beego.Debug(campaignSummaries)
+	campaignSummaries, count := m.DefaultAdunitManager.GetCampaignCounts(adunitSummary.CampaignId, adunitSummary.StartDate, adunitSummary.EndDate)
 	if len(campaignSummaries) < 1 {
 		campaignSummaries = []orm.Params{}
 	}
 	this.Data["json"] = &map[string]interface{}{"total": count, "rows": &campaignSummaries}
+	this.ServeJson()
+}
+
+func (this *AdunitController) QueryAdunit() {
+	offerId := this.GetString("offerId")
+	adunit := m.GetAdunit(offerId)
+
+	this.Data["json"] = map[string]interface{}{"adunit": &adunit}
 	this.ServeJson()
 }

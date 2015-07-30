@@ -11,9 +11,9 @@ var DefaultAdunitManager *AdUnitManager
 type Adunit struct {
 	Id int
 	OfferId string `orm:"size(16);column(campaignId)"`
-	AdunitName string `orm:"size(100);column(campaignName)"`
-	startDate time.Time `orm:"size(100);column(startDate)"`
-	endDate time.Time `orm:"size(100);column(endDate)"`
+	CampaignName string `orm:"size(100);column(campaignName)"`
+	startDate time.Time `orm:"size(100);column(startDate);type(datetime)"`
+	endDate time.Time `orm:"size(100);column(endDate);type(datetime)"`
 	cvid	string	`orm:"size(16);column(conversionId)"`
 }
 
@@ -25,7 +25,7 @@ type AdunitSummary struct {
 }
 
 func (a *Adunit) TableName() string {
-	return "Adunit"
+	return "adunit"
 }
 
 
@@ -41,9 +41,9 @@ func (tm *AdUnitManager) GetAll() (adunits []orm.Params, count int) {
 		beego.Debug("failed to get adunits", err)
 		return adunits, 0
 	} else {
-		for _, v := range adunits {
-			fmt.Println(v["campaignName"])
-		}
+//		for _, v := range adunits {
+//			fmt.Println(v["campaignName"])
+//		}
 		return adunits, len(adunits)
 	}
 }
@@ -87,4 +87,17 @@ func (tm *AdUnitManager) GetCampaignCounts(campaignId string, startDate time.Tim
 		return counts, len(counts)
 	}
 
+}
+
+func GetAdunit(offerId string) *Adunit {
+	o := orm.NewOrm()
+	adunit := Adunit{OfferId: offerId}
+	err := o.Read(&adunit, "OfferId")
+
+	if err == orm.ErrNoRows {
+		fmt.Println("No result found.")
+	} else if err == orm.ErrMissPK {
+		fmt.Println("No primary key found.")
+	}
+	return &adunit
 }

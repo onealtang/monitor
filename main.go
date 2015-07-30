@@ -1,14 +1,15 @@
 package main
 
 import (
-	_ "performad_admin/routers"
+	_ "monitor/routers"
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/orm"
-	"performad_admin/models"
+	"monitor/models"
 )
 
 func init() {
 	orm.RegisterModel(new(models.S2sActiveLog))
+	orm.RegisterModel(new(models.Adunit))
 }
 
 func main() {
