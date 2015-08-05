@@ -20,8 +20,8 @@ type Adunit struct {
 type AdunitSummary struct {
 	CampaignId 		string
 	CampaignName 	string
-	ReceivedCount	int
-	PostbackCount	int
+	ReceivedCount	int64
+	PostbackCount	int64
 }
 
 func (a *Adunit) TableName() string {
@@ -48,33 +48,41 @@ func (tm *AdUnitManager) GetAll() (adunits []orm.Params, count int) {
 	}
 }
 
-func (tm *AdUnitManager) GetCampaignCounts(campaignId string, startDate time.Time, endDate time.Time) (counts []orm.Params, count int) {
+func (tm *AdUnitManager) GetCampaignCounts(campaignId string, startDate time.Time, endDate time.Time) (counts []AdunitSummary, count int) {
 
 	o := orm.NewOrm()
 
 	var query string = ""
 
-	query = `select a.campaignId, a.campaignName, b.cnt as receivedCount, c.cnt as postbackCount from adunit a left join (
-	select offerid, count(distinct(guid)) cnt from s2s_activelog
-	where createTime > ? and createTime < ?
-	group by offerid
-	) b
-	on a.campaignId = b.offerid
-	left join
-	(
-	select campaignId, count(distinct(deviceId)) as cnt from call_postbacklog
-
-	where createTime > ? and createTime < ?
-	group by campaignId
-	) c
-	on a.campaignId = c.campaignId`
-
+	query = `
+	SELECT a.campaignId as campaign_id,
+       a.campaignName as campaign_name,
+       b.cnt AS receive_count,
+       c.cnt AS postback_count
+	FROM   adunit a
+		   LEFT JOIN (SELECT campaign,
+							 Count(DISTINCT( guid )) cnt
+					  FROM   conversion_rel_act_clk
+					  WHERE  1 = 1
+					  and time > ? and time < ?
+					  GROUP  BY campaign) b
+				  ON a.campaignid = b.campaign
+		   LEFT JOIN (SELECT campaignid,
+							 Count(DISTINCT( deviceid )) AS cnt
+					  FROM   call_postbacklog
+					  WHERE  1 = 1
+					  and createTime > ? and createTime < ?
+					  GROUP  BY campaignid) c
+				  ON a.campaignid = c.campaignid
+              `
 	var err error
+
 	if campaignId != "" {
-		query = query + `where campaignId = ?`
-		_, err = o.Raw(query, startDate, endDate, startDate, endDate, campaignId).Values(&counts)
+		query = query + `where a.campaignId = ?`
+		_, err = o.Raw(query, startDate, endDate, startDate, endDate, campaignId).QueryRows(&counts)
 	} else {
-		_, err = o.Raw(query, startDate, endDate, startDate, endDate).Values(&counts)
+//		_, err = o.Raw(query, startDate, endDate, startDate, endDate).QueryRows(&counts)
+		_, err = o.Raw(query).QueryRows(&counts)
 	}
 
 	if err != nil {
@@ -84,6 +92,7 @@ func (tm *AdUnitManager) GetCampaignCounts(campaignId string, startDate time.Tim
 //		for _, v := range counts {
 //			fmt.Println(v["campaignName"])
 //		}
+		beego.Debug(counts)
 		return counts, len(counts)
 	}
 

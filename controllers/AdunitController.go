@@ -13,8 +13,8 @@ type AdunitController struct {
 
 type AdunitSummaryRequest struct {
 	CampaignId 		string		`form:"campaignId"`
-	StartDate		time.Time	`form:"startDate"`
-	EndDate			time.Time	`form:"endDate"`
+	StartDate		time.Time	`form:"startDate,2006-1-02 15:04:05"`
+	EndDate			time.Time	`form:"endDate,2006-1-02 15:04:05"`
 }
 
 func (this *AdunitController) Get() {
@@ -33,18 +33,14 @@ func (this *AdunitController) GetAll() {
 }
 
 func (this *AdunitController) QueryCampaign() {
-	adunitSummary := new(AdunitSummaryRequest)
+	adunitSummary := AdunitSummaryRequest{}
 	this.ParseForm(&adunitSummary)
-//	beego.Debug("start: ", this.Ctx.Input["startDate"])
-//
-//	adunitSummary.endDate = time.Now()
-//	adunitSummary.startDate = time.Now().Add(-100*24*time.Hour)
 
-	beego.Debug(adunitSummary)
+	beego.Debug("request params: ", adunitSummary)
 
 	campaignSummaries, count := m.DefaultAdunitManager.GetCampaignCounts(adunitSummary.CampaignId, adunitSummary.StartDate, adunitSummary.EndDate)
 	if len(campaignSummaries) < 1 {
-		campaignSummaries = []orm.Params{}
+		campaignSummaries = []m.AdunitSummary{}
 	}
 	this.Data["json"] = &map[string]interface{}{"total": count, "rows": &campaignSummaries}
 	this.ServeJson()

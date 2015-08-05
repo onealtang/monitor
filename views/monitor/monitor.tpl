@@ -102,10 +102,10 @@
         $('#dg').datagrid({
             url: 'Adunit/QueryCampaign',
             columns: [[
-                {field: 'campaignId', title: 'Offer ID', width: 300},
-                {field: 'campaignName', title: 'Campaign Name', width: 300},
-                {field: 'receivedCount', title: 'Received Installs', width: 120, align: 'right'},
-                {field: 'postbackCount', title: 'Postback Installs', width: 120, align: 'right'}
+                {field: 'CampaignId', title: 'Offer ID', width: 300},
+                {field: 'CampaignName', title: 'Campaign Name', width: 300},
+                {field: 'ReceivedCount', title: 'Received Installs', width: 120, align: 'right'},
+                {field: 'PostbackCount', title: 'Postback Installs', width: 120, align: 'right'}
             ]]
         });
 
