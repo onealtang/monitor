@@ -4,6 +4,7 @@ import (
 	"github.com/astaxie/beego/orm"
 	"github.com/astaxie/beego"
 	"fmt"
+	sql "monitor/models/sql"
 )
 
 var DefaultAdunitManager *AdUnitManager
@@ -54,35 +55,14 @@ func (tm *AdUnitManager) GetCampaignCounts(campaignId string, startDate time.Tim
 
 	var query string = ""
 
-	query = `
-	SELECT a.campaignId as campaign_id,
-       a.campaignName as campaign_name,
-       b.cnt AS receive_count,
-       c.cnt AS postback_count
-	FROM   adunit a
-		   LEFT JOIN (SELECT campaign,
-							 Count(DISTINCT( guid )) cnt
-					  FROM   conversion_rel_act_clk
-					  WHERE  1 = 1
-					  and time > ? and time < ?
-					  GROUP  BY campaign) b
-				  ON a.campaignid = b.campaign
-		   LEFT JOIN (SELECT campaignid,
-							 Count(DISTINCT( deviceid )) AS cnt
-					  FROM   call_postbacklog
-					  WHERE  1 = 1
-					  and createTime > ? and createTime < ?
-					  GROUP  BY campaignid) c
-				  ON a.campaignid = c.campaignid
-              `
+	query = sql.Get_Adunit_Summary
 	var err error
 
 	if campaignId != "" {
 		query = query + `where a.campaignId = ?`
 		_, err = o.Raw(query, startDate, endDate, startDate, endDate, campaignId).QueryRows(&counts)
 	} else {
-//		_, err = o.Raw(query, startDate, endDate, startDate, endDate).QueryRows(&counts)
-		_, err = o.Raw(query).QueryRows(&counts)
+		_, err = o.Raw(query, startDate, endDate, startDate, endDate).QueryRows(&counts)
 	}
 
 	if err != nil {

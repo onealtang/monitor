@@ -13,8 +13,8 @@ type AdunitController struct {
 
 type AdunitSummaryRequest struct {
 	CampaignId 		string		`form:"campaignId"`
-	StartDate		time.Time	`form:"startDate,2006-1-02 15:04:05"`
-	EndDate			time.Time	`form:"endDate,2006-1-02 15:04:05"`
+	StartDate		time.Time	`form:"startDate,2006-1-2 15:04:05"`
+	EndDate			time.Time	`form:"endDate,2006-1-2 15:04:05"`
 }
 
 func (this *AdunitController) Get() {
@@ -34,6 +34,7 @@ func (this *AdunitController) GetAll() {
 
 func (this *AdunitController) QueryCampaign() {
 	adunitSummary := AdunitSummaryRequest{}
+	beego.Debug(this.Input())
 	this.ParseForm(&adunitSummary)
 
 	beego.Debug("request params: ", adunitSummary)
