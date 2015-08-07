@@ -15,4 +15,5 @@ func init() {
 	beego.AutoRouter(&controllers.AdunitController{})
 	beego.AutoRouter(&controllers.InstallController{})
 	beego.AutoRouter(&controllers.S2sActiveLogController{})
+	beego.AutoRouter(&controllers.TrackingController{})
 }

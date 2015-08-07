@@ -57,6 +57,24 @@
             <table id="s2s_dg"></table>
         </div>
     </div>
+
+    <div title="Tracking event" data-options="iconCls:'icon-reload',closable:true" style="">
+        <div class="query">
+                <span>
+                    <input class="easyui-datetimebox" id="event_startDate" style="width:150px">
+                </span>
+                <span>
+                    <input class="easyui-datetimebox" id="event_endDate" style="width:150px">
+                </span>
+                <span>
+                    <a id="event_btn" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search'">查询</a>
+                </span>
+        </div>
+        <div class="grid-result">
+            <table id="event_dg"></table>
+        </div>
+    </div>
+
 </div>
 
 
@@ -126,6 +144,49 @@
 
     }
 
+    function renderEvent() {
+
+        var now = new Date()
+        $('#event_startDate').datetimebox({
+            value: new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000).format()
+        });
+        $('#event_endDate').datetimebox({
+            value: now.format()
+        });
+
+        $('#event_btn').bind('click', function () {
+
+            $.ajax({
+                url: 'Tracking/QueryEvent',
+                type: 'POST',
+                data: {
+                    startDate: $('#event_startDate').datetimebox('getValue'),
+                    endDate: $('#event_endDate').datetimebox('getValue'),
+                },
+                success: function (data) {
+                    if (data.rows) {
+                        $('#event_dg').datagrid('loadData', data);
+                    } else {
+                        $('#event_dg').datagrid('loadData', {total: 0, rows: {}});
+                    }
+                }
+            })
+
+        });
+
+        $('#event_dg').datagrid({
+            columns: [[
+                {field: 'UtcDate', title: 'UtcDate', width: 300},
+                {field: 'SessionId', title: 'SessionId', width: 300},
+                {field: 'Action', title: 'Action', width: 120, align: 'right'},
+                {field: 'Label', title: 'Label', width: 120, align: 'right'},
+                {field: 'Value', title: 'Value', width: 120, align: 'right'},
+                {field: 'CreateDate', title: 'CreateDate', width: 120, align: 'right'}
+            ]]
+        });
+
+    }
+
     function renderSearch () {
 
 
@@ -155,10 +216,7 @@
             ]]
         });
 
-        // url: 'Adunit/QueryS2sActivLog',
-
         $('#s2s_btn').bind('click', function () {
-
 
             $.ajax({
                 url: 'S2sActiveLog/SearchS2sLog',
@@ -189,5 +247,7 @@
         renderSearch();
 
         renderS2sLog();
+
+        renderEvent();
     });
 </script>
