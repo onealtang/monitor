@@ -176,12 +176,13 @@
 
         $('#event_dg').datagrid({
             columns: [[
-                {field: 'UtcDate', title: 'UtcDate', width: 300},
-                {field: 'SessionId', title: 'SessionId', width: 300},
+                {field: 'CreateDate', title: 'CreateDate', width: 120, align: 'right'},
+                {field: 'UtcDate', title: 'UtcDate', width: 120},
+                {field: 'SessionId', title: 'SessionId', width: 120},
+                {field: 'Guid', title: 'Guid', width: 120},
                 {field: 'Action', title: 'Action', width: 120, align: 'right'},
                 {field: 'Label', title: 'Label', width: 120, align: 'right'},
-                {field: 'Value', title: 'Value', width: 120, align: 'right'},
-                {field: 'CreateDate', title: 'CreateDate', width: 120, align: 'right'}
+                {field: 'Value', title: 'Value', width: 120, align: 'right'}
             ]]
         });
 
@@ -211,8 +212,8 @@
         $('#s2s_dg').datagrid({
             columns: [[
                 {field: 'OfferId', title: 'Offer id', width: 120, align: 'left'},
-                {field: 'Guid', title: 'Guid', width: 300},
-                {field: 'DeviceId', title: 'URL', width: 600},
+                {field: 'Guid', title: 'Guid', width: 120},
+                {field: 'DeviceId', title: 'URL', width: 1000},
             ]]
         });
 

@@ -6,7 +6,7 @@ import (
 
 type TrackingEvent struct {
 	Id int `orm: "column(id)"`
-//	Guid string `orm:"size(1000);column(sessionid)"`
+	Guid string `orm:"size(255);column(guid)"`
 	SessionId string `orm:"size(50);column(sessionid)"`
 	ConversionId  string `orm:"size(50);column(cvid)"`
 	Action  	string `orm:"column(action)"`
