@@ -19,7 +19,12 @@
 
         </div>
         <div>
-            <table id="dg"></table>
+            <table id="dg" style="height: 600px;" data-options="
+                rownumbers:true,
+                singleSelect:true,
+                autoRowHeight:false,
+                pagination:true,
+                pageSize:20"></table>
         </div>
     </div>
     <div title="Search" data-options="closable:false" style="overflow:auto;padding:20px;">
@@ -37,7 +42,7 @@
         </div>
 
     </div>
-    <div title="S2s Log" data-options="iconCls:'icon-reload',closable:true" style="">
+    <div title="S2s Log" style="">
         <div class="query">
                 <span>
                     <input class="easyui-combobox" id="s2s_adunitList" name="s2s_adunitId"
@@ -54,12 +59,20 @@
                 </span>
         </div>
         <div class="grid-result">
-            <table id="s2s_dg"></table>
+            <table id="s2s_dg" style="height: 600px;" data-options="
+                rownumbers:true,
+                singleSelect:true,
+                autoRowHeight:false,
+                pagination:true,
+                pageSize:20"></table>
         </div>
     </div>
 
-    <div title="Tracking event" data-options="iconCls:'icon-reload',closable:true" style="">
+    <div title="Tracking event" style="">
         <div class="query">
+                <span>
+                    <input class="easyui-textbox" data-options="prompt:'Conversion ID'" id="event_cvid" style="width: 150px;height:32px">
+                </span>
                 <span>
                     <input class="easyui-datetimebox" id="event_startDate" style="width:150px">
                 </span>
@@ -71,7 +84,24 @@
                 </span>
         </div>
         <div class="grid-result">
-            <table id="event_dg"></table>
+            <table id="event_dg" style="height: 600px;"
+                   data-options="
+                    rownumbers:true,
+                    singleSelect:true,
+                    autoRowHeight:false,
+                    pagination:true,
+                    pageSize:20">
+                <thead>
+                    <th field="CreateDate" width="120">CreateDate</th>
+                    <th field="UtcDate" width="120">UtcDate</th>
+                    <th field="ConversionId" width="120">ConversionId</th>
+                    <th field="SessionId" width="120">SessionId</th>
+                    <th field="Guid" width="120">Guid</th>
+                    <th field="Action" width="120">Action</th>
+                    <th field="Label" width="120">Label</th>
+                    <th field="Value" width="120">Value</th>
+                </thead>
+            </table>
         </div>
     </div>
 
@@ -80,6 +110,69 @@
 
 </body>
 <script type="text/javascript">
+
+    (function($){
+        function pagerFilter(data){
+            if ($.isArray(data)){	// is array
+                data = {
+                    total: data.length,
+                    rows: data
+                }
+            }
+            var dg = $(this);
+            var state = dg.data('datagrid');
+            var opts = dg.datagrid('options');
+            if (!state.allRows){
+                state.allRows = (data.rows);
+            }
+            var start = (opts.pageNumber-1)*parseInt(opts.pageSize);
+            var end = start + parseInt(opts.pageSize);
+            data.rows = $.extend(true,[],state.allRows.slice(start, end));
+            return data;
+        }
+
+        var loadDataMethod = $.fn.datagrid.methods.loadData;
+        $.extend($.fn.datagrid.methods, {
+            clientPaging: function(jq){
+                return jq.each(function(){
+                    var dg = $(this);
+                    var state = dg.data('datagrid');
+                    var opts = state.options;
+                    opts.loadFilter = pagerFilter;
+                    var onBeforeLoad = opts.onBeforeLoad;
+                    opts.onBeforeLoad = function(param){
+                        state.allRows = null;
+                        return onBeforeLoad.call(this, param);
+                    }
+                    dg.datagrid('getPager').pagination({
+                        onSelectPage:function(pageNum, pageSize){
+                            opts.pageNumber = pageNum;
+                            opts.pageSize = pageSize;
+                            $(this).pagination('refresh',{
+                                pageNumber:pageNum,
+                                pageSize:pageSize
+                            });
+                            dg.datagrid('loadData',state.allRows);
+                        }
+                    });
+                    $(this).datagrid('loadData', state.data);
+                    if (opts.url){
+                        $(this).datagrid('reload');
+                    }
+                });
+            },
+            loadData: function(jq, data){
+                jq.each(function(){
+                    $(this).data('datagrid').allRows = null;
+                });
+                return loadDataMethod.call($.fn.datagrid.methods, jq, data);
+            },
+            getAllRows: function(jq){
+                return jq.data('datagrid').allRows;
+            }
+        })
+    })(jQuery);
+
 
     function qq(value, name) {
 
@@ -129,7 +222,7 @@
                 endDate: $('#endDate').datetimebox('getValue'),
                 campaignId: $("input[name='adunitId']").val()
 
-            })
+            });
         });
 
         $('#dg').datagrid({
@@ -140,7 +233,7 @@
                 {field: 'ReceivedCount', title: 'Received Installs', width: 120, align: 'right'},
                 {field: 'PostbackCount', title: 'Postback Installs', width: 120, align: 'right'}
             ]]
-        });
+        }).datagrid('clientPaging');
 
     }
 
@@ -154,38 +247,28 @@
             value: now.format()
         });
 
+        $('#event_dg').datagrid({data: null}).datagrid('clientPaging');
+
         $('#event_btn').bind('click', function () {
 
             $.ajax({
                 url: 'Tracking/QueryEvent',
                 type: 'POST',
                 data: {
+                    conversionId: $('#event_cvid').val(),
                     startDate: $('#event_startDate').datetimebox('getValue'),
-                    endDate: $('#event_endDate').datetimebox('getValue'),
+                    endDate: $('#event_endDate').datetimebox('getValue')
                 },
                 success: function (data) {
                     if (data.rows) {
                         $('#event_dg').datagrid('loadData', data);
                     } else {
-                        $('#event_dg').datagrid('loadData', {total: 0, rows: {}});
+                        $('#event_dg').datagrid({data:{total: 0, rows: {}}});
                     }
                 }
             })
 
         });
-
-        $('#event_dg').datagrid({
-            columns: [[
-                {field: 'CreateDate', title: 'CreateDate', width: 120, align: 'right'},
-                {field: 'UtcDate', title: 'UtcDate', width: 120},
-                {field: 'SessionId', title: 'SessionId', width: 120},
-                {field: 'Guid', title: 'Guid', width: 120},
-                {field: 'Action', title: 'Action', width: 120, align: 'right'},
-                {field: 'Label', title: 'Label', width: 120, align: 'right'},
-                {field: 'Value', title: 'Value', width: 120, align: 'right'}
-            ]]
-        });
-
     }
 
     function renderSearch () {
@@ -215,7 +298,7 @@
                 {field: 'Guid', title: 'Guid', width: 120},
                 {field: 'DeviceId', title: 'URL', width: 1000},
             ]]
-        });
+        }).datagrid('clientPaging');
 
         $('#s2s_btn').bind('click', function () {
 

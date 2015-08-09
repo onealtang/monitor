@@ -13,9 +13,10 @@ type Adunit struct {
 	Id int
 	OfferId string `orm:"size(16);column(campaignId)"`
 	CampaignName string `orm:"size(100);column(campaignName)"`
-	startDate time.Time `orm:"size(100);column(startDate);type(datetime)"`
-	endDate time.Time `orm:"size(100);column(endDate);type(datetime)"`
-	cvid	string	`orm:"size(16);column(conversionId)"`
+	StartDate time.Time `orm:"size(100);column(startDate);type(datetime)"`
+	EndDate time.Time `orm:"size(100);column(endDate);type(datetime)"`
+	ConversionId	string	`orm:"size(16);column(conversionId)"`
+	TargetUrl		string `orm:column(targetUrl)`
 }
 
 type AdunitSummary struct {

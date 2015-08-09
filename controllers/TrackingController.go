@@ -31,4 +31,5 @@ func (this *TrackingController) QueryEvent() {
 	}
 	this.Data["json"] = &map[string]interface{}{"total": count, "rows": &events}
 	this.ServeJson()
+
 }
