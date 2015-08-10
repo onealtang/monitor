@@ -11,6 +11,7 @@ type S2sActiveLog struct {
 	DeviceId string `orm:"size(1000);column(deviceId)"`
 	OfferId  string `orm:"size(50);column(offerId)"`
 	Guid 	 string	`orm:"size(40);column(guid)"`
+	CreatedDate time.Time `orm:"column(createTime);type(datetime)"`
 }
 
 func (l *S2sActiveLog) TableName() string {
@@ -52,7 +53,7 @@ func (this *S2sActiveLog) QueryS2sActiveLog(campaignId string, startDate time.Ti
 	var rows []S2sActiveLog
 	o := orm.NewOrm()
 	if (campaignId == "") {
-		o.Raw("select id, deviceId, offerId, guid from s2s_activeLog where createTime between ? and ? order by createTime desc limit 100", startDate, endDate).QueryRows(&rows)
+		o.Raw("select * from s2s_activeLog where createTime between ? and ? order by createTime desc limit 100", startDate, endDate).QueryRows(&rows)
 	} else {
 		o.Raw("select * from s2s_activeLog where campaignId = ? and createTime between ? and ? order by createTime desc limit 100",
 		startDate,
@@ -60,12 +61,6 @@ func (this *S2sActiveLog) QueryS2sActiveLog(campaignId string, startDate time.Ti
 	}
 
 	beego.Debug("Search s2s log count: ", len(rows))
-
-	if len(rows) > 0 {
-		for idx, elem := range rows {
-			beego.Debug("Idx: ", idx, ", offerId: ", elem.OfferId)
-		}
-	}
 
 	return rows, len(rows)
 }

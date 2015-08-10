@@ -295,8 +295,10 @@
         $('#s2s_dg').datagrid({
             columns: [[
                 {field: 'OfferId', title: 'Offer id', width: 120, align: 'left'},
+                {field: 'CreatedDate', title: 'Created Date', width: 120},
+                {field: 'ConversionId', title: 'Conversion Id', width: 120},
                 {field: 'Guid', title: 'Guid', width: 120},
-                {field: 'DeviceId', title: 'URL', width: 1000},
+                {field: 'Url', title: 'URL', width: 1000},
             ]]
         }).datagrid('clientPaging');
 
