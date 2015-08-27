@@ -16,17 +16,29 @@ type TrackingEvent struct {
 	CreateDate	string `orm:"column(createDate)"`
 }
 
-func (this *TrackingEvent) QueryEvent(cvid string, startDate time.Time, endDate time.Time) ([]TrackingEvent, int) {
+func (this *TrackingEvent) QueryEvent(cvid string, guid string, startDate time.Time, endDate time.Time) ([]TrackingEvent, int) {
 	o := orm.NewOrm()
+	qb, _ := orm.NewQueryBuilder("mysql")
+
+    var conditions []interface{}
+    conditions = append(conditions, startDate)
+    conditions = append(conditions, endDate)
+
+    qb.Select("*").From("tracking_event").
+    Where("createDate between ? and ?")
+
+    if cvid != "" {
+        qb.And("cvid = ?")
+        conditions = append(conditions, cvid)
+    }
+    if guid != "" {
+        qb.And("guid = ?")
+        conditions = append(conditions, guid)
+    }
+    qb.Limit(1000)
 
 	rows := []TrackingEvent{}
-	if cvid == "" {
-		query := "select * from tracking_event where createDate between ? and ? limit 1000"
-		o.Raw(query, startDate, endDate).QueryRows(&rows)
-	} else {
-		query := "select * from tracking_event where cvId = ? and createDate between ? and ? limit 1000"
-		o.Raw(query, cvid, startDate, endDate).QueryRows(&rows)
-	}
+    o.Raw(qb.String(), conditions).QueryRows(&rows)
 
 	return rows, len(rows)
 }

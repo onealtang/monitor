@@ -12,7 +12,7 @@ type TrackingController struct {
 
 type TrackingRequest struct {
 	ConversionId	string      `form:"conversionId"`
-//	Guid 			string		`form:"guid"`
+	Guid 			string		`form:"guid"`
 	StartDate		time.Time	`form:"startDate,2006-1-2 15:04:05"`
 	EndDate			time.Time	`form:"endDate,2006-1-2 15:04:05"`
 }
@@ -25,7 +25,7 @@ func (this *TrackingController) QueryEvent() {
 	beego.Debug("tracking request params: ", request)
 
 	event := &m.TrackingEvent{}
-	events, count := event.QueryEvent(request.ConversionId, request.StartDate, request.EndDate)
+	events, count := event.QueryEvent(request.ConversionId, request.Guid, request.StartDate, request.EndDate)
 	if len(events) < 1 {
 		events = []m.TrackingEvent{}
 	}
