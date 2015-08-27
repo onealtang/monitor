@@ -29,7 +29,7 @@
             {{ .S2s_Activelog }}
         </div>
 
-        <div title="Tracking event" style="">
+        <div title="Events" style="">
             {{ .Tracking_Event }}
         </div>
 

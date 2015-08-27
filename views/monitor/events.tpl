@@ -1,5 +1,5 @@
 <div class="query">
-    <div>
+    <div style="margin:10px 0">
         <span>conversion id: </span>
                 <span>
                     <input class="easyui-textbox" data-options="prompt:'Conversion ID'" id="event_cvid"
@@ -8,15 +8,15 @@
         <span>guid: </span>
                 <span>
                     <input class="easyui-textbox" data-options="prompt:'guid'" id="event_guid"
-                           style="width: 300px;height:24px">
+                           style="width: 280px;height:24px">
                 </span>
     </div>
-    <div>
+    <div style="margin-bottom:10px">
                 <span>
-                    <input class="easyui-datetimebox" id="event_startDate" style="width:150px">
+                    <input class="easyui-datetimebox" id="event_startDate" style="width:150px;height: 24px">
                 </span>
                 <span>
-                    <input class="easyui-datetimebox" id="event_endDate" style="width:150px">
+                    <input class="easyui-datetimebox" id="event_endDate" style="width:150px;height: 24px">
                 </span>
                 <span>
                     <a id="event_btn" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search'">查询</a>
@@ -35,8 +35,8 @@
         <th field="CreateDate" width="120">CreateDate</th>
         <th field="UtcDate" width="120">UtcDate</th>
         <th field="ConversionId" width="120">ConversionId</th>
-        <th field="SessionId" width="120">SessionId</th>
-        <th field="Guid" width="120">Guid</th>
+        <th field="SessionId" width="200">SessionId</th>
+        <th field="Guid" width="240">Guid</th>
         <th field="Action" width="120">Action</th>
         <th field="Label" width="120">Label</th>
         <th field="Value" width="120">Value</th>
