@@ -5,9 +5,9 @@
                     <input class="easyui-textbox" data-options="prompt:'Conversion ID'" id="event_cvid"
                            style="width: 300px;height:24px">
                 </span>
-        <span>guid: </span>
+        <span>idfa/adid: </span>
                 <span>
-                    <input class="easyui-textbox" data-options="prompt:'guid'" id="event_guid"
+                    <input class="easyui-textbox" data-options="prompt:'idfa or adid'" id="event_guid"
                            style="width: 280px;height:24px">
                 </span>
     </div>

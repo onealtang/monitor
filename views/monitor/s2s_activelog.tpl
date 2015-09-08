@@ -1,17 +1,32 @@
 <div class="query">
+    <label>Flight: </label>
                 <span>
-                    <input class="easyui-combobox" id="s2s_adunitList" name="s2s_adunitId"
-                           data-options="valueField:'campaignId',textField:'campaignName'">
+                    <input class="easyui-combobox" id="s2s_adunitList" name="s2s_adunitId" type="text"
+                           data-options="valueField:'campaignId',textField:'campaignName',prompt:'请选择广告单元'">
+                </span>
+    <label>conversion id: </label>
+                <span>
+                    <input class="easyui-textbox" data-options="prompt:'Conversion ID'" id="event_cvid"
+                           style="width: 300px;height:32px">
+                </span>
+                <label>idfa/adid: </label>
+                <span>
+                    <input class="easyui-textbox" data-options="prompt:'guid'" id="event_guid"
+                           style="width: 280px;height:32px">
+                </span>
+
+    <div>
+                <span>
+                    <input class="easyui-datetimebox" id="s2s_startDate" style="width:150px;height: 32px">
                 </span>
                 <span>
-                    <input class="easyui-datetimebox" id="s2s_startDate" style="width:150px">
-                </span>
-                <span>
-                    <input class="easyui-datetimebox" id="s2s_endDate" style="width:150px">
+                    <input class="easyui-datetimebox" id="s2s_endDate" style="width:150px; height: 32px">
                 </span>
                 <span>
                     <a id="s2s_btn" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search'">查询</a>
                 </span>
+    </div>
+
 </div>
 <div class="grid-result">
     <table id="s2s_dg" style="height: 600px;" data-options="
@@ -24,7 +39,7 @@
 
 <script type="text/javascript">
 
-    function renderS2sLog () {
+    function renderS2sLog() {
 
         var now = new Date()
         $('#s2s_startDate').datetimebox({
@@ -58,7 +73,9 @@
                 data: {
                     startDate: $('#s2s_startDate').datetimebox('getValue'),
                     endDate: $('#s2s_endDate').datetimebox('getValue'),
-                    campaignId: $("input[name='s2s_adunitId']").val()
+                    campaignId: $("input[name='s2s_adunitId']").val(),
+                    conversionId: $('#event_cvid').val(),
+                    guid: $('#event_guid').val()
                 },
                 success: function (data) {
                     if (data.rows) {
@@ -68,7 +85,6 @@
                     }
                 }
             })
-
 
 
         });

@@ -1,0 +1,23 @@
+.query {
+    width:1240px;
+    margin-top:20px;
+    margin-left:20px;
+    position: relative;
+    font-size:12px;
+    text-align:left;
+    line-height:40px;
+}
+
+.grid-result {
+    width:1240px;
+    height:490px;
+    margin-top:20px;
+    margin-left:20px;
+    position: relative;
+    font-size:12px;
+    text-align:left;
+    line-height:40px;
+    border:1px solid #DBDDEA;
+    overflow:auto;
+    overflow-x: hidden;
+}
