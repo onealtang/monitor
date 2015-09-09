@@ -4,15 +4,10 @@
                     <input class="easyui-combobox" id="s2s_adunitList" name="s2s_adunitId" type="text"
                            data-options="valueField:'campaignId',textField:'campaignName',prompt:'请选择广告单元'">
                 </span>
-    <label>conversion id: </label>
+    <label>idfa/adid: </label>
                 <span>
-                    <input class="easyui-textbox" data-options="prompt:'Conversion ID'" id="event_cvid"
-                           style="width: 300px;height:32px">
-                </span>
-                <label>idfa/adid: </label>
-                <span>
-                    <input class="easyui-textbox" data-options="prompt:'please input idfa/adid'" id="event_guid"
-                           style="width: 280px;height:32px">
+                    <input class="easyui-textbox" data-options="prompt:'idfa or adid'" id="s2s_guid"
+                           style="width: 280px;height:24px">
                 </span>
 
     <div>
@@ -59,7 +54,7 @@
             columns: [[
                 {field: 'OfferId', title: 'Offer id', width: 120, align: 'left'},
                 {field: 'CreatedDate', title: 'Created Date', width: 120},
-                {field: 'ConversionId', title: 'Conversion Id', width: 120},
+//                {field: 'ConversionId', title: 'Conversion Id', width: 120},
                 {field: 'Guid', title: 'idfa/adid', width: 240},
                 {field: 'Url', title: 'URL', width: 1000},
             ]]
@@ -74,8 +69,8 @@
                     startDate: $('#s2s_startDate').datetimebox('getValue'),
                     endDate: $('#s2s_endDate').datetimebox('getValue'),
                     campaignId: $("input[name='s2s_adunitId']").val(),
-                    conversionId: $('#event_cvid').val(),
-                    guid: $('#event_guid').val()
+//                    conversionId: $('#event_cvid').val(),
+                    guid: $('#s2s_guid').val()
                 },
                 success: function (data) {
                     if (data.rows) {
