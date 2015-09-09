@@ -11,7 +11,7 @@
                 </span>
                 <label>idfa/adid: </label>
                 <span>
-                    <input class="easyui-textbox" data-options="prompt:'guid'" id="event_guid"
+                    <input class="easyui-textbox" data-options="prompt:'please input idfa/adid'" id="event_guid"
                            style="width: 280px;height:32px">
                 </span>
 
@@ -60,7 +60,7 @@
                 {field: 'OfferId', title: 'Offer id', width: 120, align: 'left'},
                 {field: 'CreatedDate', title: 'Created Date', width: 120},
                 {field: 'ConversionId', title: 'Conversion Id', width: 120},
-                {field: 'Guid', title: 'Guid', width: 240},
+                {field: 'Guid', title: 'idfa/adid', width: 240},
                 {field: 'Url', title: 'URL', width: 1000},
             ]]
         }).datagrid('clientPaging');

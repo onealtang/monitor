@@ -64,7 +64,7 @@
                 {field: 'UtcDate', title: 'UtcDate', width: 120},
                 {field: 'ConversionId', title: 'ConversionId', width: 120},
                 {field: 'SessionId', title: 'SessionId', width: 120},
-                {field: 'Guid', title: 'Guid', width: 120},
+                {field: 'Guid', title: 'idfa/adid', width: 120},
                 {field: 'Action', title: 'Action', width: 120, align: 'right'},
                 {field: 'Label', title: 'Label', width: 120, align: 'right'},
                 {field: 'Value', title: 'Value', width: 120, align: 'right'}
