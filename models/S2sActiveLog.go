@@ -48,17 +48,41 @@ func GetS2sActiveLog(guid string) *S2sActiveLog {
 	return &log
 }
 
-func (this *S2sActiveLog) QueryS2sActiveLog(campaignId string, startDate time.Time, endDate time.Time) ([]S2sActiveLog, int) {
-
+func (this *S2sActiveLog) QueryS2sActiveLog(campaignId string, guid string, startDate time.Time, endDate time.Time) ([]S2sActiveLog, int) {
+	
 	var rows []S2sActiveLog
 	o := orm.NewOrm()
-	if (campaignId == "") {
-		o.Raw("select * from s2s_activeLog where createTime between ? and ? order by createTime desc limit 100", startDate, endDate).QueryRows(&rows)
-	} else {
-		o.Raw("select * from s2s_activeLog where campaignId = ? and createTime between ? and ? order by createTime desc limit 100",
-		startDate,
-		endDate).QueryRows(&rows)
+	qb, _ := orm.NewQueryBuilder("mysql")
+	qb.Select("*").
+		From("s2s_activeLog").
+		Where("createTime between ? and ?")
+
+	if campaignId != "" {
+		qb.And("offerId = ?")
 	}
+	if guid != "" {
+		qb.And("guid = ?")
+	}
+	qb.OrderBy("createTime").Desc().
+		Limit(1000)
+		
+//	if (campaignId == "") {
+//		o.Raw("select * from s2s_activeLog where createTime between ? and ? order by createTime desc limit 100", startDate, endDate).QueryRows(&rows)
+//	} else {
+//		o.Raw("select * from s2s_activeLog where campaignId = ? and createTime between ? and ? order by createTime desc limit 100",
+//		startDate,
+//		endDate).QueryRows(&rows)
+//	}
+	var vals []interface
+	
+	if campaignId != "" {
+		vals = append(vals, campaignId)
+	}
+	if guid != "" {
+		vals = append(vals, guid)
+	}
+	
+	o.Raw(qb.String(), vals).QueryRows(&rows)
 
 	beego.Debug("Search s2s log count: ", len(rows))
 

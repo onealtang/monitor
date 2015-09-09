@@ -47,7 +47,7 @@ func (this *S2sActiveLogController) SearchS2sLog() {
     beego.Debug("s2s log search params:", request)
 
     log := &m.S2sActiveLog{}
-    data, count := log.QueryS2sActiveLog(request.OfferId, request.StartDate, request.EndDate)
+    data, count := log.QueryS2sActiveLog(request.OfferId, request.Guid,request.StartDate, request.EndDate)
 
     allAdunit, _ := m.DefaultAdunitManager.GetAll()
 

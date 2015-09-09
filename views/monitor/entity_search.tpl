@@ -2,7 +2,7 @@
        data-options="searcher:qq,prompt:'Please Input value',menu:'#mm'"></input>
 
 <div id="mm" style="width:120px">
-    <div data-options="name:'guid'">guid</div>
+    <div data-options="name:'guid'">idfa/adid</div>
     <div data-options="name:'offerId'">offerId</div>
 </div>
 
