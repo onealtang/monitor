@@ -10,6 +10,7 @@ import (
 func init() {
 	orm.RegisterModel(new(models.S2sActiveLog))
 	orm.RegisterModel(new(models.Adunit))
+	orm.RegisterModel(new(models.FCUser))
 }
 
 func main() {

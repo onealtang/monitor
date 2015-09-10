@@ -8,7 +8,7 @@ import (
 )
 
 type AdunitController struct {
-	BaseController
+	SecuredController
 }
 
 type AdunitSummaryRequest struct {

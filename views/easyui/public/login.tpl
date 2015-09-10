@@ -1,6 +1,6 @@
 {{template "../public/header.tpl"}}
 <script type="text/javascript">
-var URL="/public"
+var URL="/security"
     $(function(){
         $("#dialog").dialog({
             closable:false,
@@ -28,7 +28,7 @@ function fromsubmit(){
         success:function(r){
             var r = $.parseJSON( r );
             if(r.status){
-                location.href = URL+"/index"
+                location.href = "/Admin"
             }else{
                 vac.alert(r.info);
             }

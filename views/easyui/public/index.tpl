@@ -2,85 +2,6 @@
 <script type="text/javascript">
 var URL="/public"
     $( function() {
-        //生成树
-        $("#tree").tree({
-            url:URL+'/index',
-            onClick:function(node){
-                if(node.attributes.url == ""){
-                    $(this).tree("toggle",node.target);
-                    return false;
-                }
-                var href = node.attributes.url;
-                var tabs = $("#tabs");
-                if(href){
-                    var content = '<iframe scrolling="auto" frameborder="0"  src="'+href+'" style="width:100%;height:100%;"></iframe>';
-                }else{
-                    var content = '未实现';
-                }
-                //已经存在tabs则选中它
-                if(tabs.tabs('exists',node.text)){
-                    //选中
-                    tabs.tabs('select',node.text);
-                    //refreshTab(node.text);
-                }else{
-                    //添加
-                    tabs.tabs('add',{
-                        title:node.text,
-                        content:content,
-                        closable:true,
-                        cache:false,
-                        fit:'true'
-                    });
-                }
-            }
-        });
-        $("#tabs").tabs({
-            width: $("#tabs").parent().width(),
-            height: "auto",
-            fit:true,
-            border:false,
-            onContextMenu : function(e, title) {
-                e.preventDefault();
-                $("#mm").menu('show', {
-                    left : e.pageX,
-                    top : e.pageY
-                }).data('tabTitle', title);
-            }
-        });
-        $('#mm').menu({
-            onClick : function(item) {
-                var curTabTitle = $(this).data('tabTitle');
-                var type = $(item.target).attr('type');
-
-                if (type === 'refresh') {
-                    refreshTab(curTabTitle);
-                    return;
-                }
-
-                if (type === 'close') {
-                    var t = $("#tabs").tabs('getTab', curTabTitle);
-                    if (t.panel('options').closable) {
-                        $("#tabs").tabs('close', curTabTitle);
-                    }
-                    return;
-                }
-
-                var allTabs = $("#tabs").tabs('tabs');
-                var closeTabsTitle = [];
-
-                $.each(allTabs, function() {
-                    var opt = $(this).panel('options');
-                    if (opt.closable && opt.title != curTabTitle && type === 'closeOther') {
-                        closeTabsTitle.push(opt.title);
-                    } else if (opt.closable && type === 'closeAll') {
-                        closeTabsTitle.push(opt.title);
-                    }
-                });
-                for ( var i = 0; i < closeTabsTitle.length; i++) {
-                    $("#tabs").tabs('close', closeTabsTitle[i]);
-                }
-            }
-        });
         //修改配色方案
         $("#changetheme").change(function(){
             var theme = $(this).val();
@@ -93,16 +14,6 @@ var URL="/public"
 //            $("#changetheme").val(themed);
 //        }
     });
-    function refreshTab(title) {
-        var tab = $("#tabs").tabs("getTab", title);
-        $("#tabs").tabs("update", {tab: tab, options: tab.panel("options")});
-    }
-    function undo(){
-        $('#tree').tree('expandAll');
-    }
-    function redo(){
-        $('#tree').tree('collapseAll');
-    }
     function modifypassword(){
         $("#dialog").dialog({
             modal:true,
@@ -175,15 +86,10 @@ var URL="/public"
 <body class="easyui-layout" style="text-align:left">
 <div region="north" border="false" style="overflow: hidden; width: 100%; height:82px; background:#D9E5FD;">
     <div style="overflow: hidden; width:200px; padding:2px 0 0 5px;">
-        <h2>BeegoAdmin</h2>
+        <h2>PerforMAD Admin</h2>
     </div>
-    <ul class="ht_nav">
-        {{range .groups}}
-            <li><span><a class="current"  href="#" onClick="selectgroup({{.Id}});$('.ht_nav li a').removeClass('current');$(this).addClass('current')">{{.Title}}</a></span></li>
-        {{end}}
-    </ul>
     <div id="header-inner" style="float:right; overflow:hidden; height:80px; width:300px; line-height:25px; text-align:right; padding-right:20px;margin-top:-50px; ">
-        欢迎你！ {{.userinfo.Nickname}} <a href="javascript:void(0);" onclick="modifypassword()"> 修改密码</a>
+        欢迎你！ {{.userinfo.Username}} <a href="javascript:void(0);" onclick="modifypassword()"> 修改密码</a>
         <a href="/public/logout" target="_parent"> 退 出</a>
     </div>
 </div>
@@ -208,24 +114,32 @@ var URL="/public"
     </div>
 </div>
 </div>
-<div region="west" border="false" split="true" title="菜单"  tools="#toolbar" style="width:200px;padding:5px;">
-    <ul id="tree"></ul>
-</div>
+
+
 <div region="center" border="false" >
     <div id="tabs" >
+        <div id="tt" class="easyui-tabs" style="width:1200px;height:800px;">
+
+            <div title="Events" style="">
+                {{ .Tracking_Event }}
+            </div>
+
+            <div title="S2s Log" style="">
+                {{ .S2s_Activelog }}
+            </div>
+
+            <div title="Search" data-options="closable:false" style="overflow:auto;padding:20px;">
+
+                {{ .Entity_Search }}
+
+            </div>
+
+            <!--<div title="Act Summary" style="padding:20px;">-->
+            <!--{{ .Act_Summary }}-->
+            <!--</div>-->
+
+        </div>
     </div>
-</div>
-<div id="toolbar">
-    <a href="#" class="icon-undo" title="全部展开"  onclick="undo()"></a>
-    <a href="#" class="icon-redo" title="全部关闭"  onclick="redo()"></a>
-</div>
-<!--右键菜单-->
-<div id="mm" style="width: 120px;display:none;">
-    <div iconCls='icon-reload' type="refresh">刷新</div>
-    <div class="menu-sep"></div>
-    <div  type="close">关闭</div>
-    <div type="closeOther">关闭其他</div>
-    <div type="closeAll">关闭所有</div>
 </div>
 </body>
 </html>
