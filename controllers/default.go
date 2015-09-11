@@ -85,7 +85,7 @@ func (this *MainController) Changepwd() {
 	if newpassword != repeatpassword {
 		this.Rsp(false, "两次输入密码不一致")
 	}
-	user, err := m.CheckLogin(userinfo.(m.FCUser).Username, oldpassword)
+	user, err := m.CheckLogin(userinfo.(admin_m.User).Username, oldpassword)
 	if err == nil {
 		var u m.FCUser
 		u.Id = user.Id

@@ -1,7 +1,9 @@
 package models
 import (
+	"crypto/md5"
     "github.com/astaxie/beego/orm"
     "errors"
+    "encoding/hex"
 )
 
 type FCUser struct {
@@ -42,7 +44,8 @@ func UpdateUser(u *FCUser) (int64, error) {
 }
 
 func Pwdhash(str string) string {
-    return str
+    md5bytes := md5.Sum([]byte(str))
+    return hex.EncodeToString(md5bytes[:])
 }
 
 // methods of structure

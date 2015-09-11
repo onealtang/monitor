@@ -1,6 +1,6 @@
 {{template "../public/header.tpl"}}
 <script type="text/javascript">
-var URL="/public"
+var URL="/security"
     $( function() {
         //修改配色方案
         $("#changetheme").change(function(){
@@ -25,7 +25,7 @@ var URL="/public"
                 iconCls:'icon-save',
                 handler:function(){
                     $("#form1").form('submit',{
-                        url:URL+'/changepwd',
+                        url:URL + '/changepwd',
                         onSubmit:function(){
                             return $("#form1").form('validate');
                         },
